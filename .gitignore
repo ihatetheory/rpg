@@ -1,5 +1,12 @@
 # CMake created structure
 build
 
+# Doxygen created documentation
+docs/*
+!docs/.dir
+
 # Configs
 .editorconfig
+
+# VSCode project specific
+.vscode
