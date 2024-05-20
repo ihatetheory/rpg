@@ -1,6 +1,6 @@
 #pragma once
 
-class Stat {
+class Ability {
 public:
 
 private:
