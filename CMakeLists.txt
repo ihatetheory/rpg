@@ -25,20 +25,22 @@ endif()
 
 # Set the CMake min. version required to configure the code
 cmake_minimum_required(VERSION 3.10)
+# Project name
+set(TARGET_NAME rpg)
 # Set the project name
-project("rpg")
+project(${TARGET_NAME})
 
 # Include all the files that follow the pattern
 file(GLOB classes "include/*.h" "src/*.cpp")
 # Create an executable with the specified name
 # including the previously cteated set of files
-add_executable(rpg main.cpp ${classes})
+add_executable(${TARGET_NAME} main.cpp ${classes})
 
 # Add include folder to handle header files
-target_include_directories(rpg PRIVATE "include/")
+target_include_directories(${TARGET_NAME} PRIVATE "include/")
 
-# doxygen_add_docs("rpg.pdf" ALL)
-
-# Make sure to use c++17 standard
-set(CMAKE_CXX_STANDARD 17)
+# Make sure to use c++ standard
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+target_compile_features(${TARGET_NAME} PRIVATE cxx_std_20)

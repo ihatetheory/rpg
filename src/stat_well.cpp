@@ -1,5 +1,20 @@
 #include "stat_well.h"
 
+StatWell::StatWell(welltype value) {
+    set(value);
+}
+
+StatWell::~StatWell() {}
+
+StatWell::StatWell(welltype current, welltype max) {
+    // Setting current and max to max input value
+    set(max);
+    // Setting current to its input value if it is less than max
+    if (current < max) {
+        current_ = current;
+    }
+}
+
 void StatWell::reduceCurrent(welltype value) {
     // If current value is smaller or equal to the input value
     // then set current to zero
@@ -47,12 +62,10 @@ void StatWell::reduceMax(welltype value) {
         max_ = 1u;
         return;
     }
-    // Update max value
     max_ -= value;
 }
 
 void StatWell::increaseMax(welltype value) {
-    // Update max value
     max_ += value;
 }
 
@@ -62,7 +75,6 @@ void StatWell::setMax(welltype value) {
         max_ = 1u;
         return;
     }
-    // Set max value
     max_ = value;
     // If new max value is smaller than current value
     // then set current to max
@@ -77,10 +89,9 @@ const welltype StatWell::getMax() const {
 
 void StatWell::set(welltype value) {
     // If the new value is less then one set both values to one
-    if (value < 1u) {
+    if (value <= 1u) {
         current_ = max_ = 1u;
         return;
     }
-    // Set current and max values
     current_ = max_ = value;
 };

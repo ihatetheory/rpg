@@ -1,3 +1,7 @@
+# iOS generated files
+.DS_Store
+**/.DS_Store
+
 # CMake created structure
 build
 

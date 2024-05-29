@@ -9,23 +9,16 @@ class StatWell {
 public:
 
     /**
-     * @brief Default StatWell constructor.
-     */
-    StatWell() {
-        current_ = max_ = 1u;
-    }
-
-    /**
-     * @brief Default StatWell destructor.
-     */
-    ~StatWell() {}
-
-    /**
-     * @brief StatWell constructor setting both current and max to the input parameter.
+     * @brief Default StatWell constructor setting both current and max to the input parameter.
      * 
-     * @param value with which both current and max will be initialized.
+     * @param value with which both current and max will be initialized. Has a default value of '1u'.
      */
-    StatWell(welltype value) { set(value); }
+    StatWell(welltype value = 1u);
+
+    /**
+     * @brief StatWell destructor.
+     */
+    ~StatWell();
 
     /**
      * @brief StatWell constructor setting both current and max to corresponding input parameter.
@@ -33,12 +26,7 @@ public:
      * @param current value with which current will be initialized.
      * @param max value with which max will be initialized.
      */
-    StatWell(welltype current, welltype max) {
-        if (current >= 0u && max >= 1u) {
-            current_ = current;
-            max_ = max;
-        }
-    }
+    StatWell(welltype current, welltype max);
 
     /**
      * @brief Reduce current by value.
@@ -99,7 +87,7 @@ public:
     /**
      * @brief Setter for both current and max value.
      * 
-     * @param New value to set both current and max.
+     * @param value used to set both current and max.
      */
     void set(welltype value);
 

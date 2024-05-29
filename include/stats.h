@@ -2,126 +2,214 @@
 
 #include "data_type.h"
 
-#include <array>
+#include <vector>
+
+enum class CORESTATS  {STAMINA, STRENGTH, INTELECT, LUCK, NUM_STATS};
+enum class ARMORSTATS {PIERCE, SLASH, SLAM, SLAP, NUM_STATS};
+enum class RESISTATS  {FIRE, WATER, AIR, EARTH, NUM_STATS};
 
 /**
- * @brief Stat class to handle charachter stats. Particularyl setter, increase and decrease as they should work around non-negative values.
- * @tparam T 
+ * @brief Templated StatBlock class that will take care of stats. Used for base stats, armor as well as element resistance organisation.
  */
-template <typename T>
-class Stat {
+template <class T>
+class StatBlock {
 public:
 
     /**
-     * @brief Default Stat constructor.
-     */
-    Stat() : value_(0u) {}
+     * @brief size public variable to hold size of the stats container.
+    */
+    unsigned short size;
 
     /**
-     * @brief Default Stat destructor.
-     */
-    ~Stat() {}
+     * @brief statblock public variable to hold the stats, i.e. container.
+    */
+    std::vector<stattype> statblock;
 
     /**
-     * @brief Stat constructor setting its value to the input parameter.
+     * @brief Default StatBlock constructor has been deleted to prevent empty initialization.
+     * See StatBlock(T size, stattype value) as how to do init.
+     */
+    StatBlock() = delete;
+
+    /**
+     * @brief StatBlock destructor.
+     */
+    // virtual ~StatBlock() = 0;
+    ~StatBlock();
+
+    /**
+     * @brief StatBlock constructor with input parameters to define the stat container.
      * 
-     * @param value with which stat value will be initialized.
+     * @param vtsize used to reserve containers space, usually filled with STATENUM::NUM_STATS.
+     * @param value is a initial value stat values are set to.
      */
-    Stat(T value) { set(value); }
+    StatBlock(T vtsize, stattype value = 0u);
 
     /**
-     * @brief Reduce stat by value.
+     * @brief += operator reloaded
      * 
-     * @param value by which to reduce stat.
+     * @param rhs a right hand side StatBlock to the operator
      */
-    void reduce(T value) {
-        // If stat value is smaller or equal to the input value
-        // then set stat to zero
-        if (value_ <= value) {
-            value_ = 0u;
-            return;
-        }
-        // Update stat value
-        value_ -= value;
-    }
+    StatBlock<T>& operator+=(const StatBlock& rhs);
 
     /**
-     * @brief Increase stat by value.
+     * @brief -= operator reloaded
      * 
-     * @param value by which to increase stat.
+     * @param rhs a right hand side StatBlock to the operator
      */
-    void increase(T value) {
-        // Update stat value
-        value_ += value;
-    }
+    StatBlock<T>& operator-=(const StatBlock& rhs);
 
     /**
-     * @brief Setter.
+     * @brief = operator reloaded
      * 
-     * @param value to set the stat value with.
+     * @param rhs a right hand side StatBlock to the operator
      */
-    void set(T value) {
-        // If the input is negative set stat to zero
-        if (value < 0u) {
-            value_ = 0u;
-            return;
-        }
-        // Set stat value
-        value_ = value;
-    }
-
-    /**
-     * @brief Getter.
-     * 
-     * @return Stat value.
-     */
-    const T get() const {
-        return value_;
-    }
-
-private:
-    T value_;
+    StatBlock<T>& operator=(const StatBlock<T>& rhs);
 };
 
-class BaseStats {
+/**
+ * @brief Stats class to hold core, armor and resistance stats.
+ */
+class Stats {
 public:
 
     /**
-     * @brief Default BaseStats constructor.
+     * @brief Default Stats constructor with one optional parameter.
+     * 
+     * @param value optional parameter to set all the stats to, takes '0u' value by default.
      */
-    BaseStats()
-     : stamina_(), strength_(), intelect_(), armor_(), resistance_() {}
+    Stats(stattype value = 0u);
 
     /**
-     * @brief Default BaseStats destructor.
+     * @brief Stats destructor.
      */
-    ~BaseStats() {}
+    ~Stats();
 
     /**
-     * @brief BaseStats constructor setting base stat values to the input parameter.
+     * @brief Stats constructor with three input parameters to initialize different statblocks separately.
+     * 
+     * @param core value to initialize core statblock values with.
+     * @param armor value to initialize armor statblock values with.
+     * @param resi value to initialize resistance statblock values with.
      */
-    BaseStats(stattype value) {
-        stamina_ = strength_ = intelect_ = value;
-        armor_ = 0u;
-        resistance_ = {0u, 0u, 0u, 0u};
-    }
+    Stats(stattype core, stattype armor, stattype resi);
 
     /**
-     * @brief BaseStats constructor setting base stat values to their corresponding input parameters.
+     * @brief Setter for core stats with shared value.
+     * 
+     * @param value to set core stats to.
      */
-    BaseStats(stattype stamina, stattype strength, stattype intelect, stattype armor = 0u, stattype resistance = 0u)
-     : stamina_(stamina), strength_(strength), intelect_(intelect),
-       armor_(armor), resistance_{resistance, resistance, resistance, resistance} {}
+    void setCoreStats(stattype value);
+
+    /**
+     * @brief
+     * 
+     * @param
+     */
+    void setCoreStats(const std::vector<stattype> values);
+
+    /**
+     * @brief Core stats getter.
+     * 
+     * @return corestats statblock as a constant vector of stattype.
+     */
+    const std::vector<stattype> getCoreStats() const;
+
+    /**
+     * @brief
+     * 
+     * @param
+     */
+    void setArmorStats(stattype value);
+
+    /**
+     * @brief
+     * 
+     * @param
+     */
+    void setArmorStats(const std::vector<stattype> values);
+
+    /**
+     * @brief Armor stats getter.
+     * 
+     * @return armorstats statblock as a constant vector of stattype.
+     */
+    const std::vector<stattype> getArmorStats() const;
+
+    /**
+     * @brief
+     * 
+     * @param
+     */
+    void setResistanceStats(stattype value);
+
+    /**
+     * @brief
+     * 
+     * @param
+     */
+    void setResistanceStats(const std::vector<stattype> values);
+
+    /**
+     * @brief Resistance stats getter.
+     * 
+     * @return resistancestats statblock as a constant vector of stattype.
+     */
+    const std::vector<stattype> getResistanceStats() const;
+
+    /**
+     * @brief
+     * 
+     * @param
+     * @param
+     */
+    void setStat(CORESTATS stat, stattype value);
+
+    /**
+     * @brief
+     * 
+     * @param
+     * @param
+     */
+    void setStat(ARMORSTATS stat, stattype value);
+
+    /**
+     * @brief
+     * 
+     * @param
+     * @param
+     */
+    void setStat(RESISTATS stat, stattype value);
+
+    /**
+     * @brief Core stat getter.
+     * 
+     * @param stat from CORESTATS.
+     * 
+     * @return corestats stat value.
+     */
+    const stattype getStat(CORESTATS stat) const;
+
+    /**
+     * @brief Armor stat getter.
+     * 
+     * @param stat from ARMORSTATS.
+     * 
+     * @return armorstats stat value.
+     */
+    const stattype getStat(ARMORSTATS stat) const;
+
+    /**
+     * @brief Resistance stat getter.
+     * 
+     * @param stat from RESISTATS.
+     * 
+     * @return resistancestats stat value.
+     */
+    const stattype getStat(RESISTATS stat) const;
 
 private:
-    Stat<stattype> stamina_;
-    Stat<stattype> strength_;
-    Stat<stattype> intelect_;
-
-    Stat<stattype> armor_;
-    // 0 - Fire
-    // 1 - Water
-    // 2 - Air
-    // 3 - Earth
-    std::array<Stat<stattype>, 4> resistance_;
+    StatBlock<CORESTATS> corestats_;
+    StatBlock<ARMORSTATS> armorstats_;
+    StatBlock<RESISTATS> resistancestats_;
 };
